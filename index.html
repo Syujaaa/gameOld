@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: whitesmoke;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .game-container{
+            background-color: aliceblue;
+            border: 2px solid gray;
+            border-radius: 8px;
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        .game-header{
+            display: flex;
+            justify-content: center;
+            height: 120px;
+            padding: 1rem;
+            background-color: wheat;
+        }
+
+        .game-display{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: azure;
+            flex-direction: column;
+            flex: 1;
+            height: 430px;
+        }
+
+        .game-footer{
+            background-color: wheat;
+            text-align: center;
+            padding: 1rem;
+        }
+
+       #instructions{
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 1rem;
+        background-color: gray;
+        border-radius: 8px;
+        color: white;
+       }
+
+       #historyDisplay{
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        padding: 1rem;
+        transform: translate(-50%, -50%);
+        padding: 1rem;
+        background-color: gray;
+        border-radius: 8px;
+        color: white;
+        display: none;
+       }
+       .exitContainer{
+        display: flex;
+        justify-content: end;
+       }
+       #btn-close-instructions{
+        background-color: red;
+        border: none;
+        border-radius: 3px;
+        padding: 5px;
+        color: white;
+       }
+       #btn-close-instructions:hover{
+        cursor: pointer;
+       }
+       #btn-close-history{
+        background-color: red;
+        border: none;
+        border-radius: 3px;
+        padding: 5px;
+        color: white;
+       }
+       #btn-close-history:hover{
+        cursor: pointer;
+       }
+
+       #instructionsButton{
+        padding: 0.7rem;
+        background-color: brown;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        width: 100px;
+       }
+       #historyButton{
+        padding: 0.7rem;
+        background-color: blue;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        margin-left: 5px;
+        width: 100px;
+       }
+       #historyButton:hover{
+        background-color: rgb(134, 134, 255);
+        cursor: pointer;
+       }
+       #playButton{
+        padding: 0.7rem;
+        background-color: gray;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        width: 100px;
+        margin-left: 5px;
+        transition: background-color 0.3s ease;
+       }
+
+       #playButton:not(:disabled):hover{
+        background-color: rgb(173, 218, 173);
+        cursor: pointer;
+       }
+       #playGameButton{
+        margin-top: 10px ;
+        padding: 0.7rem;
+        background-color: green;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        width: 100px;
+        margin-left: 5px;
+        transition: background-color 0.3s ease;
+       }
+
+       #playGameButton:not(:disabled):hover{
+        background-color: rgb(173, 218, 173);
+        cursor: pointer;
+       }
+       
+       #instructionsButton:hover{
+        background-color: rgb(209, 119, 119);
+        cursor: pointer;
+       }
+
+       .button-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       }
+       
+       #lobby{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+       }
+
+       #equipment{
+        display: none;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+       }
+       #username{
+        padding: 7px;
+        border-radius: 5px;
+        border: 2px solid rgb(190, 190, 190);
+        width: 200px;
+        margin-bottom: 15px;
+       }
+
+       #username:focus{
+        border: 2px solid gray;
+        outline: none;
+       }
+
+       #level{
+        padding: 7px;
+        border-radius: 5px;
+        border: 2px solid rgb(190, 190, 190);
+        width: 200px;
+        margin-bottom: 15px;
+       }
+
+       #level:focus{
+        outline: none;
+        border: 2px solid gray;
+       }
+
+       .equipmentContainerGun{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+       }
+
+       .gunContainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+       }
+
+       .gunImg img{
+        width: 100px;
+        height: 100px;
+       }
+       
+       #gun1:hover, #gun2:hover{
+        cursor: pointer;
+       }
+       
+       #gun1::selection, #gum2::selection{
+        background-color: blue;
+        color: blue;
+       }
+
+       .targetContainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+       }
+
+       .targetImg img{
+        width: 75px;
+        height: 75px;
+       }
+
+       .equipmentContainerTarget{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+       }
+
+        #target1:hover, #target2:hover, #target3:hover{
+        cursor: pointer;
+       }
+
+       #coundownDisplay{
+        position: absolute;
+        left: 50%;
+        top: 25%;
+        transform: translate(-50%);
+        font-weight: bold;
+        z-index: 15;
+       }
+
+       #gameplay{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
+        background: url('Sprites/background.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 500px;
+       }
+
+       /* #gameplay:hover{
+        cursor: url('Sprites/pointer.png') 26 26, pointer;
+       } */
+
+       .game-header-gameplay{
+            display: flex;
+            justify-content: center;
+            height: 50px;
+            padding: 1rem;
+            background-color: wheat;
+        }
+
+        .fire-effect{
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: url('Sprites/boom.png'), center no-repeat;
+            background-size: contain;
+            animation: fadeUp 1s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fadeUp {
+            0%{
+                opacity: 1;
+                transform: scale(1);
+            }
+            100%{
+                opacity: 0;
+                transform: scale(2);
+            }
+        }
+
+        #timerDisplay{
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .target{
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            opacity: 0;
+            transform: scale(0) rotateX(90deg) translateY(20px);
+            pointer-events: none;
+            transition: transform 0.8s ease-in-out, opacity 0.4s ease-in-out
+            
+        }
+
+        .appear{
+            opacity: 1;
+            transform: scale(1) rotateX(0) translateY(0);
+            pointer-events: auto;
+        }
+
+        .sleep{
+            opacity: 0;
+            transform: scale(0) rotateX(90deg) translateY(20px);
+        }
+
+        #scoreDisplay{
+            position: absolute;
+            font-weight: bold;
+            top: 20px;
+            left: 50%;
+            transform: translate(-50%);
+        }
+
+        #gunGame{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            bottom: 0px;
+            right: 20px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .switch-gun{
+            animation: switchGun 1s ease-in-out;
+        }
+
+        @keyframes switchGun {
+            0%{
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100%{
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #pauseDisplay{
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border: 2px solid gray;
+            border-radius: 8px;
+            background-color: gray;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 15;
+        }
+        #endGameDisplay{
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border: 2px solid gray;
+            border-radius: 8px;
+            background-color: gray;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 15;
+        }
+        .btn{
+            text-align: center;
+        }
+
+        .btn button{
+            width: 100px;
+            padding: 10px;
+            margin: 20px;
+            font-weight: bold;
+            background-color: bisque;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn button:hover{
+           
+            background-color: rgb(255, 251, 245);
+            cursor: pointer;
+        }
+
+        #successSave{
+            display: none;
+        }
+
+        #usernameDisplay{
+            position: absolute;
+            right: 10px;
+            top: 20px;
+        }
+
+        #pointer {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    left: 50%;
+    z-index: 20;
+    transform: translate(-50%, -50%);
+    background: url("Sprites/pointer.png") no-repeat center center;
+    background-size: contain; 
+    pointer-events: none; 
+}
+
+    </style>
+</head>
+<body>
+    <main class="game-container" role="main" aria-label="Game Container">
+
+        <section id="game-menu" role="region" aria-label="Game menu">
+            <header class="game-header">
+                <img src="Sprites/shooter.png" alt="" srcset="">
+            </header>
+            
+            <div id="instructions">
+                <div class="exitContainer">
+                    <button type="button" id="btn-close-instructions">X</button>
+                </div>
+                <p>Hi friend, welcome this how to play game:</p>
+                <p>1. Input your username, select level, choose gun, choose target </p>
+                <p>2. Click 'play game' button</p>
+                <p>3. point the pointer at the target</p>
+                <p>4. click to shoot</p>
+                <p>5. If the shot does not hit the target, the time will be reduced by 5 seconds</p>
+                <p>6. Press Esc to open the pause</p>
+                <p>7. You can change guns after pressing the space button</p>
+                <p>8. If game was over you can save your username and score by click save match</p>
+                <p>9. Enjoy</p>
+                
+            </div>
+            <div id="historyDisplay">
+                <div class="exitContainer">
+                    <button type="button" id="btn-close-history">X</button>
+                </div>
+                <label for="sortBy">Sort by</label>
+                <select name="" id="sortBy">
+                    <option value="lastMatch">Last Match</option>
+                    <option value="highestScore">Highest Score</option>
+                </select>
+                
+                <ul id="scoreHistoryDisplay"></ul>
+            </div>
+
+        
+            <div class="game-display">
+                <div id="lobby">
+                    <input type="text" id="username" placeholder="Input username">
+                    <div class="button-container">
+                        <button type="button" id="instructionsButton">instructions</button>
+                        <button type="button" id="historyButton">History</button>
+                        <button type="button" id="playButton" disabled>Play game</button>
+                    </div>
+                </div>
+
+                <div id="equipment">
+                    <select id="level">
+                        <option value="">Select level</option>
+                        <option value="0">Easy</option>
+                        <option value="1">Medium</option>
+                        <option value="2">Hard</option>
+                    </select>
+
+                    <div class="equipmentContainerGun">
+                        <div class="gunContainer">
+                            <div class="gunImg">
+                                <img src="Sprites/gun1.png" alt="" srcset="">
+                            </div>
+                            <div class="gunRadio">
+                                <input type="radio" name="gun" id="gun1" value="Sprites/gun1.png">
+                            </div>
+                        </div>
+                        <div class="gunContainer">
+                            <div class="gunImg">
+                                <img src="Sprites/gun2.png" alt="" srcset="">
+                            </div>
+                            <div class="gunRadio">
+                                <input type="radio" name="gun" id="gun2" value="Sprites/gun2.png">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="equipmentContainerTarget">
+                        <div class="targetContainer">
+                            <div class="targetImg">
+                                <img src="Sprites/target1.png" alt="" srcset="">
+                            </div>
+                            <div class="targetRadio">
+                                <input type="radio" name="target" id="target1" value="Sprites/target1.png">
+                            </div>
+                        </div>
+                        <div class="targetContainer">
+                            <div class="targetImg">
+                                <img src="Sprites/target2.png" alt="" srcset="">
+                            </div>
+                            <div class="targetRadio">
+                                <input type="radio" name="target" id="target2" value="Sprites/target2.png">
+                            </div>
+                        </div>
+                        <div class="targetContainer">
+                            <div class="targetImg">
+                                <img src="Sprites/target3.png" alt="" srcset="">
+                            </div>
+                            <div class="targetRadio">
+                                <input type="radio" name="target" id="target3" value="Sprites/target3.png">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" id="playGameButton">Play game</button>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="game-footer">
+                <p>footer</p>
+            </footer>
+        </section>
+
+        <section id="gameplay-container" role="region" aria-label="Gameplay" hidden>
+            <header class="game-header-gameplay">
+                <div id="timerDisplay">Time: </div>
+                <div id="scoreDisplay">Score: </div>
+                <div id="usernameDisplay"></div>
+            </header>
+
+            <div id="gameplay">
+                <div id="pauseDisplay">
+                    <div class="btn">
+                       <button type="button" id="continueButton">Continue</button>
+                    </div>
+                    <div class="btn">
+                        <button type="button" onclick="location.reload()">Exit</button>
+                    </div>
+                </div>
+                <div id="pointer"></div>
+    
+                <div id="coundownDisplay">3</div>
+                <img src="" alt="" id="gunGame">
+
+                <div id="endGameDisplay">
+                    <div class="btn">
+                       <button type="button" id="saveButton">Save score</button>
+                       <p id="successSave">Score saved</p>
+                    </div>
+                    <div class="btn">
+                        <button type="button" id="restartButton" onclick="gameStart()">Restart</button>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="game-footer">
+                gameplay
+            </footer>
+        </section>
+    </main>
+
+    <script>
+        const instructions = document.getElementById('instructions');
+        const closeInstructions = document.getElementById('btn-close-instructions')
+        const instructionsButton = document.getElementById('instructionsButton')
+       
+        closeInstructions.addEventListener('click', () => {
+            instructions.hidden = true
+        })
+
+        instructionsButton.addEventListener('click', () => {
+            instructions.hidden = false
+        })
+        const pauseDisplay = document.getElementById('pauseDisplay')
+        const playButton = document.getElementById('playButton')
+        const usernameInput = document.getElementById('username')
+        const lobby = document.getElementById('lobby')
+        const equipment = document.getElementById('equipment')
+        const closeHistoryButton = document.getElementById('btn-close-history')
+        const historyDisplay = document.getElementById('historyDisplay')
+        const historyButton = document.getElementById('historyButton')
+        const scoreHistoryDisplay = document.getElementById('scoreHistoryDisplay')
+
+        historyButton.addEventListener('click', () => {
+            historyDisplay.style.display = 'block'
+
+            const history = JSON.parse(localStorage.getItem('history')) || []
+
+            const sortBy = (sortBy) => {
+                const sortedHistory = [...history]
+
+                if(sortBy === 'highestScore'){
+                    sortedHistory.sort((a,b) => b.score - a.score)
+                }
+                if(sortBy === 'lastMatch'){
+                    sortedHistory.reverse()
+                }
+                
+                scoreHistoryDisplay.innerHTML = sortedHistory.map(sortHistory => (
+                    `<li>${sortHistory.username}, ${sortHistory.score}</li>`
+                )).join("")
+            }
+
+            sortBy('lastMatch');
+
+            document.getElementById('sortBy').addEventListener('change', (e) => {
+                sortBy(e.target.value)
+            })
+        })
+        closeHistoryButton.addEventListener('click', () => {
+            historyDisplay.style.display = 'none'
+        })
+        
+        usernameInput.addEventListener('input', (e) => {
+           playButton.disabled = (e.target.value === '')
+
+           if(playButton.disabled === true){
+            playButton.style.backgroundColor = 'gray';
+            }else{
+                playButton.style.backgroundColor = 'green';
+                playButton.addEventListener('mouseenter', () => {
+                    playButton.style.backgroundColor = 'rgb(173, 218, 173)'
+                })
+
+                playButton.addEventListener('mouseleave', () => {
+                    playButton.style.backgroundColor = 'green';
+                })
+
+                playButton.addEventListener('click', () => {
+                    lobby.style.display = 'none'
+                    equipment.style.display = 'flex'
+                })
+            }
+        })
+
+        const playGameButton = document.getElementById('playGameButton')
+        const levelSelect = document.getElementById('level')
+        const targetInput = document.querySelectorAll('input[name="target"]')
+        const gunInput = document.querySelectorAll('input[name="gun"]')
+
+        const gameMenu = document.getElementById('game-menu')
+        const gameContainer = document.getElementById('gameplay-container')
+        const endGameDisplay = document.getElementById('endGameDisplay')
+
+        const coundownDisplay = document.getElementById('coundownDisplay')
+        playGameButton.addEventListener('click', () => {
+            gameIsStart = true
+
+            if(levelSelect.value === ''){
+                alert('Please select level')
+                gameIsStart = false
+            }
+
+            if(![...gunInput].find(radio => radio.checked)){
+                alert('Please choose gun')
+                gameIsStart = false
+            }
+
+            if(![...targetInput].find(radio => radio.checked)){
+                alert('Please choose target')
+                gameIsStart = false
+            }
+
+            if(gameIsStart){
+                gameMenu.hidden = true
+                gameContainer.hidden = false
+                gameStart()
+            }
+        })
+
+        let isPaused = true
+        
+
+        const countdown = () => {
+            return new Promise((resolve) => {
+                let Thecountdown = 3;
+                coundownDisplay.style.display = 'flex'
+                isPaused = true
+                coundownDisplay.textContent = `${Thecountdown}`
+                
+                let countdownInterval = setInterval(() => {
+                    Thecountdown--;
+                    coundownDisplay.textContent = `${Thecountdown}`
+
+                    if(Thecountdown <= 0){
+                        clearInterval(countdownInterval)
+                        coundownDisplay.textContent = `Start!`
+                        setTimeout(() => {
+                           
+                            isPaused = false
+                            resolve()
+
+                            setTimeout(() => {
+                                 coundownDisplay.style.display = 'none'
+                            }, 500)
+                        }, 100)
+                        
+                    }
+                }, 1000)
+            })
+        }
+        const scoreDisplay = document.getElementById('scoreDisplay')
+        const timerDisplay = document.getElementById('timerDisplay')
+        const gunGame = document.getElementById('gunGame')
+
+        let positionUsed = []
+        let score = 0;
+
+        
+        async function gameStart(){
+            positionUsed = []
+            endGameDisplay.style.display = 'none'
+            pauseDisplay.style.display = 'none'
+            let targetOld = document.querySelectorAll('.target');
+
+            targetOld.forEach(target => {
+                target.remove()
+            })
+            const time = [30, 20, 15];
+            timer = time[levelSelect.value];
+            timerDisplay.textContent = `Time: ${timer}`
+             scoreDisplay.textContent = `Score: ${score}`
+            gunGame.src = [...gunInput].find(radio => radio.checked).value
+
+            document.getElementById('usernameDisplay').textContent = `${usernameInput.value}`;
+            await countdown();
+
+            createTarget()
+            createTarget()
+            createTarget()
+
+            let randomTarget = setInterval(() => {
+                if(!isPaused){
+                    createTarget()
+                }
+            }, 3000)
+            
+            let timerInterval = setInterval(() => {
+                if(!isPaused){
+                    timer--;
+                timerDisplay.textContent = `Time: ${timer}`
+
+                if(timer <= 0){
+                    timerDisplay.textContent = `Time: 0`;
+                    clearInterval(timerInterval)
+                    clearInterval(randomTarget)
+                    isPaused = true
+                    endGameDisplay.style.display = 'flex';
+                    console.log('game over')
+
+                    if(document.pointerLockElement){
+                        document.exitPointerLock();
+                    }
+
+                    // if (document.pointerLockElement) {
+                    //         document.exitPointerLock();
+                    //     }
+                }
+                }
+            }, 1000)
+            console.log('berhasil')
+        }
+
+        const gameplay = document.getElementById('gameplay');
+        const pointer = document.getElementById('pointer');
+        let pointerX = window.innerWidth / 2
+        let pointerY = window.innerHeight / 2
+
+        let isLock = false
+
+        gameplay.addEventListener('click', (e) => {
+            if(!isLock){
+                gameplay.requestPointerLock()
+                return
+            }
+
+            if(!isPaused){
+                
+            const fireEffect = document.createElement('div')
+            fireEffect.classList.add('fire-effect')
+
+            fireEffect.style.left = `${pointerX - 25}px`;
+            fireEffect.style.top = `${pointerY - 25}px`;
+
+            gameplay.appendChild(fireEffect)
+
+            fireEffect.addEventListener('animationend', () => {
+                fireEffect.remove()
+            })
+
+            const rect = pointer.getBoundingClientRect()
+            const centerX = rect.left + rect.width / 2
+            const centerY = rect.top + rect.height / 2
+
+            const elemAtPointer = document.elementFromPoint(centerX, centerY)
+
+            if(elemAtPointer && elemAtPointer.classList.contains('target')){
+                score += 20;
+                scoreDisplay.textContent = `Score: ${score}`
+
+                elemAtPointer.classList.add('sleep')
+                setTimeout(() => {
+                    elemAtPointer.remove()
+                }, 500)
+
+            }else{
+                timer -= 5
+            }
+            }
+        })
+
+        gameplay.addEventListener('mousemove', (e) => {
+           if(document.pointerLockElement === gameplay){
+            pointerX += e.movementX;
+            pointerY += e.movementY;
+
+            pointerX = Math.max(0, Math.min(window.innerWidth, pointerX))
+            pointerY = Math.max(0, Math.min(window.innerHeight, pointerY))
+
+            pointer.style.top = `${pointerY}px`
+            pointer.style.left = `${pointerX}px`
+
+            if(!isPaused){
+                gunGame.style.top = `${pointerY - gunGame.offsetHeight / 15}px`
+                gunGame.style.left = `${pointerX - gunGame.offsetWidth/ 10}px`
+            }
+           }
+        })
+
+
+        // let pointerX = window.innerWidth / 2;
+        // let pointerY = window.innerHeight / 2;
+
+        // gameplay.addEventListener('click', (e) => {
+        //     gameplay.requestPointerLock();
+        //     if(!isPaused){
+        //     const rect = gameplay.getBoundingClientRect();
+        //     const x = e.clientX - rect.left;
+        //     const y = e.clientY - rect.top;
+
+        //     const fireEffect = document.createElement('div')
+        //     fireEffect.classList.add('fire-effect')
+
+        //     gameplay.appendChild(fireEffect)
+
+        //     fireEffect.style.top = `${y - 25}px`
+        //     fireEffect.style.left = `${x - 25}px`
+        //     fireEffect.addEventListener('animationend', () => {
+        //         fireEffect.remove()
+        //     })
+
+        //     if(!e.target.classList.contains('target')){
+        //         timer -= 5;
+        //     }
+        // }
+        // })
+
+
+
+
+
+//         gameplay.addEventListener('click', (e) => {
+//     gameplay.requestPointerLock();
+
+//     if (!isPaused) {
+//         const fireEffect = document.createElement('div');
+//         fireEffect.classList.add('fire-effect');
+//         gameplay.appendChild(fireEffect);
+
+//         fireEffect.style.top = `${pointerY - 25}px`;
+//         fireEffect.style.left = `${pointerX - 25}px`;
+
+//         fireEffect.addEventListener('animationend', () => {
+//             fireEffect.remove();
+//         });
+
+//         // 🔥 Perbaikan disini
+//         const rect = pointer.getBoundingClientRect();
+//         const centerX = rect.left + rect.width / 2;
+//         const centerY = rect.top + rect.height / 2;
+
+//         const elemAtPointer = document.elementFromPoint(centerX, centerY);
+
+//         console.log(elemAtPointer);
+
+//         if (elemAtPointer && elemAtPointer.classList.contains('target')) {
+//             score += 20;
+//             scoreDisplay.textContent = `Score: ${score}`;
+
+//             elemAtPointer.classList.add('sleep');
+//             setTimeout(() => {
+//                 elemAtPointer.remove();
+//             }, 500);
+
+//             console.log('berhasil');
+//         } else {
+//             timer -= 5;
+//         }
+//     }
+// });
+
+
+//         gameplay.addEventListener('mousemove', (e) => {
+//     if (document.pointerLockElement === gameplay) {
+//         pointerX += e.movementX;
+//         pointerY += e.movementY;
+
+//         pointerX = Math.max(0, Math.min(window.innerWidth, pointerX));
+//         pointerY = Math.max(0, Math.min(window.innerHeight, pointerY));
+
+//         pointer.style.left = `${pointerX}px`;
+//         pointer.style.top = `${pointerY}px`;
+
+//         if (!isPaused) {
+//             gunGame.style.top = `${pointerY - gunGame.offsetHeight / 2}px`;
+//             gunGame.style.left = `${pointerX - gunGame.offsetWidth / 2}px`;
+//         }
+//     }
+// });
+
+
+        const mindistance = 100;
+        function randomPosition(){
+            const rect = gameplay.getBoundingClientRect();
+            let x, y, isValid;
+
+            do{
+                x = Math.random() * (rect.width - 100)
+                y = Math.random() * (rect.height - 100)
+                isValid = positionUsed.every(pos => {
+                    dx = pos.x - x
+                    dy = pos.y - y
+                    return Math.sqrt(dx*dx + dy*dy) > mindistance
+                })
+            }while(!isValid)
+
+            positionUsed.push({x, y})
+
+            return {x, y}
+        }
+
+        function setTargetPosition(target){
+            const {x, y} = randomPosition();
+
+            target.style.top = `${y}px`;
+            target.style.left = `${x}px`;
+        }
+
+        function setTargetImage(target){
+            const targetImage = [...targetInput].find(radio => radio.checked).value
+            target.src = targetImage;
+        }
+
+        function createTarget(){
+            const target = document.createElement('img');
+            target.classList.add('target')
+
+            setTargetImage(target)
+            setTargetPosition(target)
+
+            setTimeout(() => {
+                target.classList.add('appear')
+            }, 100)
+            gameplay.appendChild(target)
+
+            // if(!isPaused){
+            //     target.addEventListener('click', (e) => {
+            //         score += 20;
+            //         scoreDisplay.textContent = `Score: ${score}`
+            //         target.classList.add('sleep')
+            //         setTimeout(() => {
+            //             target.remove();
+            //         }, 500)
+            //         console.log(score)
+            //     })
+            // }
+        }
+     
+        // document.addEventListener('keydown', (e) => {
+           
+        //         if(e.code === 'Escape' && gameIsStart){
+        //             isPaused = !isPaused
+
+        //             pauseDisplay.style.display = isPaused ? 'flex' : 'none';
+
+        //             !isPaused ? continueGame() : ''
+        //         }
+            
+        //     if(e.code === 'Space' && gameIsStart){
+        //         const guns = ['Sprites/gun1.png', 'Sprites/gun2.png'];
+
+        //         gunGame.classList.add('switch-gun')
+
+        //         gunGame.addEventListener('animationend', () => {
+        //             gunGame.classList.remove('switch-gun')
+        //         })
+        //         if(gunGame.src.includes(guns[0])){
+        //             gunGame.src = guns[1]
+        //         }else{
+        //             gunGame.src = guns[0]
+        //         }
+        //     }
+        // })
+
+        document.addEventListener('keydown', (e) => {
+    if(e.code === 'Space' && gameIsStart){
+        const guns = ['Sprites/gun1.png', 'Sprites/gun2.png'];
+
+        gunGame.classList.add('switch-gun');
+
+        gunGame.addEventListener('animationend', () => {
+            gunGame.classList.remove('switch-gun');
+        });
+
+        if(gunGame.src.includes(guns[0])){
+            gunGame.src = guns[1];
+        } else {
+            gunGame.src = guns[0];
+        }
+    }
+});
+
+    document.addEventListener('pointerlockchange', (e) => {
+        const Lock = document.pointerLockElement === gameplay
+        isLock = Lock
+       if(document.pointerLockElement !== gameplay){
+        isPaused = true
+        pauseDisplay.style.display = 'flex'
+       
+
+        document.addEventListener('keydown', (e) => {
+            if(e.code === 'Escape'){
+                continueGame()
+            }
+        })
+       }
+        })
+
+
+// document.addEventListener('pointerlockchange', () => {
+//     if (document.pointerLockElement !== gameplay && gameIsStart) {
+//         isPaused = true;
+//         pauseDisplay.style.display = 'flex';
+//         console.log('Game paused because pointer lock canceled.');
+//     }
+// });
+
+        document.getElementById('continueButton').addEventListener('click', () => {
+            continueGame()
+        })
+
+        document.getElementById('saveButton').addEventListener('click', () => {
+            saveScore()
+        })
+
+        function saveScore(){
+            const history = JSON.parse(localStorage.getItem('history')) || []
+            const username = usernameInput.value
+            // const levelsName = ['Easy', 'Normal', 'Hard'];
+            // const TheLevel = levelsName[levelSelect.value]
+            history.push({username, score})
+            localStorage.setItem('history', JSON.stringify(history))
+            document.getElementById('saveButton').style.display = 'none'
+            document.getElementById('successSave').style.display = 'flex'
+        }
+
+        function continueGame(){
+            pauseDisplay.style.display = 'none'
+            countdown()
+        }
+
+        
+    </script>
+</body>
+</html>
